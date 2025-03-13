@@ -1,4 +1,3 @@
-# 파일 경로를 지정 (절대 경로 사용)
 file_path = r'C:\Users\godzi\codyssey\mission_computer_main.log'
 
 def read_file(path):
