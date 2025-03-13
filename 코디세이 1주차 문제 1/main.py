@@ -3,7 +3,6 @@ file_path = r'C:\Users\godzi\codyssey\mission_computer_main.log'
 
 def read_file(path):
     try:
-        # UTF-8 인코딩으로 파일을 읽기 모드('r')로 열기
         with open(path, 'r', encoding='utf-8') as file:
             return file.read()  # 파일 내용을 문자열로 반환
     except FileNotFoundError:
