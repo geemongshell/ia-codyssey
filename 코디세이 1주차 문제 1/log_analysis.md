@@ -52,6 +52,3 @@
 ## 5. 결론
 2023년 8월 27일의 미션은 대부분 성공적으로 진행되었고, 로켓 발사부터 궤도 진입, 위성 배치까지 주요 목표는 모두 달성되었습니다. 그러나 미션 종료 후 발생한 산소 탱크 폭발이 사고의 주요 원인입니다.
 
-
-with open('log_analysis.md', 'w', encoding='utf-8') as file:
-    file.write(report_content)
