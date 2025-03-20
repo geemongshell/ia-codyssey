@@ -1,7 +1,7 @@
 import csv
 
-file_path = 'C:\\Users\\godzi\\codyssey\\문제3\\Mars_Base_Inventory_List.csv'
-output_file_path = 'C:\\Users\\godzi\\codyssey\\문제3\\Sorted_Flammability_List.csv'
+file_path = 'C:\\Users\\dino1\\codyssey\\문제3\\Mars_Base_Inventory_List.csv'
+output_file_path = 'C:\\Users\\dino1\\codyssey\\문제3\\Sorted_Flammability_List.csv'
 
 inventory_list = []
 
