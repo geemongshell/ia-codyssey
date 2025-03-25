@@ -27,7 +27,7 @@ class DummySensor:
         file_index = 1
 
         while True:
-            file_name = f'mar_bunker_{file_index}.csv'
+            file_name = f'mars_bunker_{file_index}.csv'
             try:
                 # 파일이 존재하는지 확인하기 위해 읽기 시도
                 with open(file_name, 'r', encoding='utf-8'):
