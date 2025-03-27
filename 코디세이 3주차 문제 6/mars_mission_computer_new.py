@@ -9,10 +9,10 @@ class DummySensor:
 
     def set_env(self):
         """주어진 범위 내에서 무작위 값을 생성하여 env_values에 저장"""
-        # 가상의 날짜와 시간 생성
+        # 현재 날짜와 시간 잡는 거 없다고 해서 임의의 가상 날짜와 시간 생성
         year = 2025
         month = random.randint(1, 12)
-        # 월에 따라 일(day) 범위 지정
+        # 월에 따라 일 범위
         if month in {1, 3, 5, 7, 8, 10, 12}:
             day = random.randint(1, 31)
         elif month in {4, 6, 9, 11}:
