@@ -35,24 +35,6 @@ class MissionComputer:
         self.running = True
         self.data_log = []  # 5분 평균 계산을 위한 데이터 저장 리스트
 
-    def save_to_csv(self):
-        """환경 값을 CSV 파일로 저장 (파일이 중복되지 않도록 자동 증가)"""
-        file_index = 1
-
-        while True:
-            file_name = f'mars_bunker_{file_index}.csv'
-            try:
-                with open(file_name, 'r', encoding='utf-8'):
-                    file_index += 1
-            except FileNotFoundError:
-                break
-
-        with open(file_name, 'w', encoding='utf-8') as file:
-            for key, value in self.env_values.items():
-                file.write(f'{key}, {value}\n')
-
-        print(f'환경 데이터가 {file_name} 파일로 저장되었습니다.')
-
     def get_sensor_data(self):
         """센서의 값을 가져와서 env_values에 저장하고 5초마다 JSON 형태로 출력"""
         def sensor_loop():
