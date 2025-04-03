@@ -1,6 +1,5 @@
 import random
 import time
-import json
 
 class DummySensor:
     """화성 기지 환경 센서의 더미 클래스"""
@@ -38,8 +37,26 @@ class MissionComputer:
             # 센서 데이터 생성 및 출력
             self.sensor.set_env()
             self.env_values = self.sensor.get_env()
-            print(json.dumps(self.env_values, indent=4, ensure_ascii=False))
-            
+
+            # JSON 형식으로 출력 (import json 없이)
+            print(
+                '{{\n'
+                '    "mars_base_internal_temperature": {},\n'
+                '    "mars_base_external_temperature": {},\n'
+                '    "mars_base_internal_humidity": {},\n'
+                '    "mars_base_external_illuminance": {},\n'
+                '    "mars_base_internal_Co2": {},\n'
+                '    "mars_base_internal_oxygen": {}\n'
+                '}}'.format(
+                    self.env_values["mars_base_internal_temperature"],
+                    self.env_values["mars_base_external_temperature"],
+                    self.env_values["mars_base_internal_humidity"],
+                    self.env_values["mars_base_external_illuminance"],
+                    self.env_values["mars_base_internal_Co2"],
+                    self.env_values["mars_base_internal_oxygen"]
+                )
+            )
+
             # 5초 대기
             time.sleep(5)
 
