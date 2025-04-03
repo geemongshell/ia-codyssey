@@ -1,6 +1,5 @@
 import random
 import time
-import json
 import threading
 
 class DummySensor:
@@ -43,7 +42,25 @@ class MissionComputer:
                 self.sensor.set_env()
                 self.env_values = self.sensor.get_env()
                 self.data_log.append(self.env_values.copy())
-                print(json.dumps(self.env_values, indent=4, ensure_ascii=False))
+
+                # JSON 형식으로 출력 (import json 없이)
+                print(
+                    '{{\n'
+                    '    "mars_base_internal_temperature": {},\n'
+                    '    "mars_base_external_temperature": {},\n'
+                    '    "mars_base_internal_humidity": {},\n'
+                    '    "mars_base_external_illuminance": {},\n'
+                    '    "mars_base_internal_Co2": {},\n'
+                    '    "mars_base_internal_oxygen": {}\n'
+                    '}}'.format(
+                        self.env_values["mars_base_internal_temperature"],
+                        self.env_values["mars_base_external_temperature"],
+                        self.env_values["mars_base_internal_humidity"],
+                        self.env_values["mars_base_external_illuminance"],
+                        self.env_values["mars_base_internal_Co2"],
+                        self.env_values["mars_base_internal_oxygen"]
+                    )
+                )
 
                 if time.time() - start_time >= 300:
                     self.print_avg_values()
@@ -77,7 +94,23 @@ class MissionComputer:
             avg_values[key] = sum(entry[key] for entry in self.data_log) / num_entries
         
         print("5분 평균 환경 데이터:")
-        print(json.dumps(avg_values, indent=4, ensure_ascii=False))
+        print(
+            '{{\n'
+            '    "mars_base_internal_temperature": {:.2f},\n'
+            '    "mars_base_external_temperature": {:.2f},\n'
+            '    "mars_base_internal_humidity": {:.2f},\n'
+            '    "mars_base_external_illuminance": {:.2f},\n'
+            '    "mars_base_internal_Co2": {:.2f},\n'
+            '    "mars_base_internal_oxygen": {:.2f}\n'
+            '}}'.format(
+                avg_values["mars_base_internal_temperature"],
+                avg_values["mars_base_external_temperature"],
+                avg_values["mars_base_internal_humidity"],
+                avg_values["mars_base_external_illuminance"],
+                avg_values["mars_base_internal_Co2"],
+                avg_values["mars_base_internal_oxygen"]
+            )
+        )
 
 # RunComputer 인스턴스 생성 및 실행
 RunComputer = MissionComputer()
