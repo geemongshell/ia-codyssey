@@ -64,7 +64,6 @@ class MissionComputer:
                 self.running = False
                 thread.join()
                 print('System stopped….')
-                self.save_to_csv()
 
     def print_avg_values(self):
         """5분 동안 수집된 데이터의 평균 값을 계산하여 출력"""
