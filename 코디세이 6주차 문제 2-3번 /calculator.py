@@ -6,15 +6,12 @@ from PyQt5.QtCore import Qt
 class Calculator(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle('계산기')
+        self.setWindowTitle('iPhone 스타일 계산기')
         self.setFixedSize(320, 480)
-        self.create_ui()
-        self.expression = ''
-        self.current_input = ''
-        self.previous_value = ''
-        self.operator = ''
+        self.init_ui()
+        self.reset()
 
-    def create_ui(self):
+    def init_ui(self):
         main_layout = QVBoxLayout()
 
         self.history = QLabel()
@@ -29,8 +26,7 @@ class Calculator(QWidget):
         self.display.setStyleSheet('font-size: 32px; background-color: black; color: white; border: none; padding: 0 10px;')
         main_layout.addWidget(self.display)
 
-        button_layout = QGridLayout()
-
+        grid = QGridLayout()
         buttons = [
             ('AC', 0, 0, 'gray'), ('±', 0, 1, 'gray'), ('%', 0, 2, 'gray'), ('÷', 0, 3, 'orange'),
             ('7', 1, 0, 'dark'), ('8', 1, 1, 'dark'), ('9', 1, 2, 'dark'), ('×', 1, 3, 'orange'),
@@ -39,24 +35,21 @@ class Calculator(QWidget):
             ('0', 4, 0, 'dark', 1, 2), ('.', 4, 2, 'dark'), ('=', 4, 3, 'orange')
         ]
 
-        for button in buttons:
-            text = button[0]
-            row = button[1]
-            col = button[2]
-            color = button[3]
-            rowspan = button[4] if len(button) > 4 else 1
-            colspan = button[5] if len(button) > 5 else 1
+        for btn in buttons:
+            text, row, col, color = btn[:4]
+            rowspan = btn[4] if len(btn) > 4 else 1
+            colspan = btn[5] if len(btn) > 5 else 1
 
-            btn = QPushButton(text)
-            btn.setFixedSize(70 * colspan, 70 * rowspan)
-            btn.setStyleSheet(self.button_style(color))
-            btn.clicked.connect(self.on_button_clicked)
-            button_layout.addWidget(btn, row, col, rowspan, colspan)
+            button = QPushButton(text)
+            button.setFixedSize(70 * colspan, 70 * rowspan)
+            button.setStyleSheet(self.btn_style(color))
+            button.clicked.connect(self.on_click)
+            grid.addWidget(button, row, col, rowspan, colspan)
 
-        main_layout.addLayout(button_layout)
+        main_layout.addLayout(grid)
         self.setLayout(main_layout)
 
-    def button_style(self, color):
+    def btn_style(self, color):
         base = 'border-radius: 35px; font-size: 20px;'
         if color == 'gray':
             return f'{base} background-color: #a5a5a5; color: black;'
@@ -66,46 +59,40 @@ class Calculator(QWidget):
             return f'{base} background-color: #333333; color: white;'
         return base
 
-    def format_number(self, num_str):
-        try:
-            if '.' in num_str:
-                integer_part, decimal_part = num_str.split('.')
-                return '{:,}'.format(int(integer_part)) + '.' + decimal_part
-            else:
-                return '{:,}'.format(int(num_str))
-        except:
-            return num_str
+    def reset(self):
+        self.current_input = ''
+        self.previous_value = ''
+        self.operator = ''
+        self.display.setText('')
+        self.history.setText('')
 
-    def on_button_clicked(self):
-        button = self.sender()
-        btn_text = button.text()
+    def format_number(self, text):
+        try:
+            if '.' in text:
+                i, d = text.split('.')
+                return '{:,}'.format(int(i)) + '.' + d
+            return '{:,}'.format(int(text))
+        except:
+            return text
+
+    def on_click(self):
+        btn_text = self.sender().text()
 
         if btn_text == 'AC':
-            self.expression = ''
-            self.current_input = ''
-            self.previous_value = ''
-            self.operator = ''
-            self.display.setText('')
-            self.history.setText('')
+            self.reset()
         elif btn_text == '=':
-            try:
-                if self.operator and self.previous_value:
-                    exp = self.previous_value + self.operator + self.current_input
-                    exp = exp.replace('÷', '/').replace('×', '*').replace('−', '-')
-                    result = eval(exp)
-                    result_str = str(result)
-                    self.display.setText(self.format_number(result_str))
+            if self.operator and self.previous_value and self.current_input:
+                try:
+                    expression = self.previous_value + self.operator + self.current_input
+                    result = str(eval(expression.replace('÷', '/').replace('×', '*').replace('−', '-')))
+                    self.display.setText(self.format_number(result))
                     self.history.setText('')
-                    self.expression = result_str
-                    self.current_input = result_str
+                    self.current_input = result
                     self.previous_value = ''
                     self.operator = ''
-            except Exception:
-                self.display.setText('Error')
-                self.expression = ''
-                self.current_input = ''
-                self.previous_value = ''
-                self.operator = ''
+                except:
+                    self.display.setText('Error')
+                    self.reset()
         elif btn_text in ['+', '−', '×', '÷']:
             if self.current_input:
                 self.previous_value = self.current_input
@@ -119,6 +106,6 @@ class Calculator(QWidget):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    calc = Calculator()
-    calc.show()
+    win = Calculator()
+    win.show()
     sys.exit(app.exec_())
