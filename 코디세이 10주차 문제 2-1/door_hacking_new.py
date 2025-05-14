@@ -30,8 +30,9 @@ def unlock_zip():
                 current_time = time.time()
                 if current_time - last_report_time >= report_interval:
                     elapsed_time = current_time - start_time
-                    # 암호 진행 상태를 표시 (현재까지 시도한 자리만 표시)
-                    progress = password.decode('utf-8').rstrip('abcdefghijklmnopqrstuvwxyz0123456789') + '*' * (8 - len(password.decode('utf-8').rstrip('abcdefghijklmnopqrstuvwxyz0123456789')))
+                    # 암호 진행 상태를 표시 (현재까지 시도한 자리까지만 표시)
+                    decoded_password = password.decode('utf-8')
+                    progress = ''.join([c if i < len(decoded_password) else '*' for i, c in enumerate(decoded_password)])
                     print(f"[INFO] Elapsed time: {elapsed_time / 60:.2f} minutes")
                     print(f"[INFO] Attempts: {attempts}, Current progress: {progress}")
                     last_report_time = current_time
