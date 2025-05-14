@@ -18,7 +18,7 @@ def unlock_zip():
 
     try:
         with zipfile.ZipFile('emergency_storage_key.zip', 'r') as zip_file:
-            # 가능한 모든 6자리 조합을 생성하여 시도
+            # 가능한 모든 8자리 조합을 생성하여 시도
             for password in itertools.product(charset, repeat=8):
                 attempts += 1
                 password = ''.join(password).encode('utf-8')  # 암호 조합을 문자열로 변환 후 바이트로 인코딩
