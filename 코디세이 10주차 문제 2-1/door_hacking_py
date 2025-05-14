@@ -1,41 +1,48 @@
 # door_hacking.py
 import zipfile
 import time
+import itertools
+import zlib
 
-def unlock_zip(zip_path):
-    start_time = time.time()
-    attempts = 0
-    charset = 'abcdefghijklmnopqrstuvwxyz0123456789'
-    
+
+def unlock_zip():
+    """
+    Brute-force로 zip 파일 'emergency_storage_key.zip'의 암호를 푸는 함수.
+    - 암호는 소문자와 숫자로 구성된 6자리 문자열.
+    - 성공 시 암호를 'password.txt'에 저장하고, 시작 시간, 반복 횟수, 경과 시간을 출력.
+    - zip 파일이 없거나 오류 발생 시 예외 처리 수행.
+    """
+    start_time = time.time()  # 시작 시간 기록
+    attempts = 0  # 시도 횟수
+    charset = 'abcdefghijklmnopqrstuvwxyz0123456789'  # 암호에 사용할 문자 집합
+
     try:
-        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-            for a in charset:
-                for b in charset:
-                    for c in charset:
-                        for d in charset:
-                            for e in charset:
-                                for f in charset:
-                                    password = f'{a}{b}{c}{d}{e}{f}'
-                                    attempts += 1
-                                    try:
-                                        zip_ref.extractall(pwd=password.encode())
-                                        elapsed_time = time.time() - start_time
-                                        print(f'Password found: {password}')
-                                        print(f'Total attempts: {attempts}')
-                                        print(f'Time taken: {elapsed_time:.2f} seconds')
-                                        with open('password.txt', 'w') as f:
-                                            f.write(password)
-                                        return password
-                                    except RuntimeError:
-                                        continue
+        with zipfile.ZipFile('emergency_storage_key.zip', 'r') as zip_file:
+            # 가능한 모든 6자리 조합을 생성하여 시도
+            for password in itertools.product(charset, repeat=6):
+                attempts += 1
+                password = ''.join(password).encode('utf-8')  # 암호 조합을 문자열로 변환 후 바이트로 인코딩
+                try:
+                    # 추출 시도
+                    zip_file.extractall(pwd=password)
+                    elapsed_time = time.time() - start_time
+                    print(f"[SUCCESS] Password found: {password.decode('utf-8')}")
+                    print(f"Attempts: {attempts}")
+                    print(f"Elapsed time: {elapsed_time:.2f} seconds")
+                    # 성공한 암호를 파일로 저장
+                    with open('password.txt', 'w') as f:
+                        f.write(password.decode('utf-8'))
+                    return
+                except (RuntimeError, zipfile.BadZipFile, zlib.error):
+                    # 암호가 틀린 경우 혹은 압축 해제 중 오류 발생 시 무시하고 다음 시도로 진행
+                    continue
+        print("[FAILED] Password not found.")
     except FileNotFoundError:
-        print('Error: ZIP file not found.')
+        print("[ERROR] Zip file not found.")
     except Exception as e:
-        print(f'Error: {e}')
+        print(f"[ERROR] An unexpected error occurred: {e}")
 
-    print('Password not found.')
-    return None
 
-# Usage
-zip_path = r'C:\Users\dino1\codyssey\문제2-1\emergency_storage_key.zip'
-unlock_zip(zip_path)
+if __name__ == '__main__':
+    print("[INFO] Starting the brute-force password cracking...")
+    unlock_zip()
