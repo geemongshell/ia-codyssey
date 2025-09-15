@@ -12,14 +12,16 @@ class Spaceman(BaseHTTPRequestHandler):
         except FileNotFoundError:
             content = '<html><body><h1>index.html 파일을 찾을 수 없습니다.</h1></body></html>'
 
-        # 응답 상태 코드 (200 OK)
+        # 응답 상태 코드 (200)
         self.send_response(200)
 
         # 헤더 전송 (캐시 방지 옵션 포함)
-        self.send_header('Content-type', 'text/html; charset=utf-8')
+        self.send_header('Content-type', 'text/html; charset=utf-8') 
+        
+        # 캐시 없애기(됐다 스바)
         self.send_header('Cache-Control', 'no-cache, no-store, must-revalidate')
-        self.send_header('Pragma', 'no-cache')
-        self.send_header('Expires', '0')
+        self.send_header('Pragma', 'no-cache') 
+        self.send_header('Expires', '0') 
         self.end_headers()
 
         # 클라이언트에 HTML 전송
