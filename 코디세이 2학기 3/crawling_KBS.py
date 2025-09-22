@@ -27,9 +27,9 @@ class KbsCrawler:
         soup = BeautifulSoup(html, 'html.parser')
 
 
-        # 대체 선택자: 만약 위가 실패할 경우
+    
         if self.headlines:
-            # 예: 주요 뉴스들이 <p class="title"> 로 감싸져 있을 수 있다
+            # 예: 주요 뉴스들이 <p class="title"> 로 감싸져 있는 듯?
             title_tags = soup.find_all(['p'], class_='title')
             for tag in title_tags:
                 text = tag.get_text(strip=True)
